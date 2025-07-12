@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu de Jogos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2d5016, #4a7c59, #2d5016);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1.2s ease-out;
+        }
+
+        .title h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: #ffffff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #76ff03, #c6ff00, #76ff03);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .title p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: #a8d982;
+            opacity: 0.9;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(118, 255, 3, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: cardSlideIn 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+        .game-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px) rotate(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotate(0deg);
+            }
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(118, 255, 3, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            border-color: #76ff03;
+            box-shadow: 0 20px 40px rgba(118, 255, 3, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .game-card:active {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-card:hover .game-icon {
+            animation: iconSpin 0.6s ease-in-out;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-description {
+            color: #a8d982;
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .add-game {
+            background: rgba(118, 255, 3, 0.2);
+            border: 2px dashed rgba(118, 255, 3, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .add-game:hover {
+            background: rgba(118, 255, 3, 0.3);
+            border-style: solid;
+        }
+
+        .add-icon {
+            font-size: 3rem;
+            color: #76ff03;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(118, 255, 3, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .game-card {
+                padding: 25px 20px;
+            }
+            
+            .title {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-card {
+                padding: 20px 15px;
+            }
+            
+            .game-icon {
+                font-size: 3rem;
+            }
+            
+            .game-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="title">
+            <h1>🎮 MENU DE JOGOS 🎮</h1>
+            <p>Escolha seu jogo favorito e divirta-se!</p>
+        </div>
+        
+        <div class="games-grid">
+            <!-- Exemplo de jogos - você pode modificar ou adicionar mais -->
+            <div class="game-card" onclick="playGame('blackjack')">
+                <span class="game-icon">🃏</span>
+                <h3 class="game-title">BlackJack</h3>
+                <p class="game-description">Desafie sua sorte com o jogo Blackjack, também conhecido como 21</p>
+                
+            </div>
+            
+            <div class="game-card" onclick="playGame('memory')">
+                <span class="game-icon">🧠</span>
+                <h3 class="game-title">Jogo da Memória</h3>
+                <p class="game-description">Teste sua capacidade de memorização</p>
+            </div>
+            
+            <div class="game-card" onclick="playGame('racing')">
+                <span class="game-icon">🏎️</span>
+                <h3 class="game-title">Corrida</h3>
+                <p class="game-description">Acelere e seja o primeiro na linha de chegada</p>
+            </div>
+            
+            <div class="game-card" onclick="playGame('adventure')">
+                <span class="game-icon">⚔️</span>
+                <h3 class="game-title">Aventura</h3>
+                <p class="game-description">Explore mundos fantásticos e misteriosos</p>
+            </div>
+            
+            <div class="game-card" onclick="playGame('arcade')">
+                <span class="game-icon">👾</span>
+                <h3 class="game-title">Arcade</h3>
+                <p class="game-description">Diversão retrô com jogos clássicos</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para quando um jogo é selecionado
+        function playGame(gameType) {
+            // Adicione aqui a lógica para iniciar o jogo selecionado
+            alert(`Iniciando ${gameType}! 🎮\n\nAqui você pode redirecionar para a página específica do jogo.`);
+            
+            // Exemplo de como você pode redirecionar para diferentes jogos:
+            // window.location.href = `games/${gameType}.html`;
+        }
+
+
+        // Função para adicionar jogo ao grid
+        function addGameToGrid(name, icon, description) {
+            const gamesGrid = document.querySelector('.games-grid');
+            const addButton = document.querySelector('.add-game');
+            
+            const newGameCard = document.createElement('div');
+            newGameCard.className = 'game-card';
+            newGameCard.onclick = () => playGame(name.toLowerCase().replace(' ', ''));
+            
+            newGameCard.innerHTML = `
+                <span class="game-icon">${icon}</span>
+                <h3 class="game-title">${name}</h3>
+                <p class="game-description">${description}</p>
+            `;
+            
+            gamesGrid.insertBefore(newGameCard, addButton);
+            
+            // Adiciona animação ao novo card
+            newGameCard.style.opacity = '0';
+            newGameCard.style.transform = 'translateX(-100px) rotate(-10deg)';
+            
+            setTimeout(() => {
+                newGameCard.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                newGameCard.style.opacity = '1';
+                newGameCard.style.transform = 'translateX(0) rotate(0deg)';
+            }, 100);
+        }
+
+        // Criar partículas flutuantes
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Tamanho aleatório
+                const size = Math.random() * 6 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Posição aleatória
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Delay de animação aleatório
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Inicializar partículas quando a página carregar
+        window.addEventListener('load', createParticles);
+
+        // Adicionar efeito de hover em dispositivos touch
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
