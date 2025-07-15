@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivinhe o Número</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        #guessInput {
+            width: 120px;
+            padding: 12px;
+            font-size: 1.2em;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            margin-right: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        #guessInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #submitBtn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        #submitBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        #submitBtn:active {
+            transform: translateY(0);
+        }
+
+        #feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-high {
+            background: #fed7d7;
+            color: #c53030;
+            border: 2px solid #feb2b2;
+        }
+
+        .feedback-low {
+            background: #bee3f8;
+            color: #2b77d9;
+            border: 2px solid #90cdf4;
+        }
+
+        .feedback-correct {
+            background: #c6f6d5;
+            color: #25855a;
+            border: 2px solid #9ae6b4;
+        }
+
+        .feedback-start {
+            background: #f7fafc;
+            color: #718096;
+            border: 2px solid #e2e8f0;
+        }
+
+        .history-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .history-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95em;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-guess {
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .history-feedback {
+            font-size: 0.9em;
+            padding: 4px 8px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .history-feedback.high {
+            background: #e53e3e;
+        }
+
+        .history-feedback.low {
+            background: #3182ce;
+        }
+
+        .restart-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+
+        .celebration {
+            animation: celebration 0.6s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            #guessInput {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="language-toggle" onclick="toggleLanguage()">🌐 EN</button>
+        
+        <h1 id="title">Adivinhe o Número</h1>
+        <p class="subtitle" id="subtitle">Tente adivinhar o número entre 1 e 100!</p>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <span class="info-label" id="attemptsLabel">Tentativas</span>
+                <span class="info-value" id="attempts">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label" id="rangeLabel">Intervalo</span>
+                <span class="info-value">1-100</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label" id="statusLabel">Status</span>
+                <span class="info-value" id="status">Jogando</span>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <input type="number" id="guessInput" min="1" max="100" placeholder="?" autocomplete="off">
+            <button id="submitBtn" onclick="makeGuess()">Enviar</button>
+        </div>
+        
+        <div id="feedback" class="feedback-start">
+            <span id="feedbackText">Faça sua primeira tentativa!</span>
+        </div>
+        
+        <div class="history-section">
+            <h3 class="history-title" id="historyTitle">Histórico de Tentativas</h3>
+            <div class="history-list" id="historyList">
+                <div style="text-align: center; color: #718096; font-style: italic;" id="noHistoryText">
+                    Nenhuma tentativa ainda...
+                </div>
+            </div>
+        </div>
+        
+        <button class="restart-btn" onclick="restartGame()" id="restartBtn">Novo Jogo</button>
+    </div>
+
+    <script>
+        // Configuração do jogo
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        let gameOver = false;
+        let gameHistory = [];
+        let currentLanguage = 'pt';
+
+        // Traduções
+        const translations = {
+            pt: {
+                title: "Adivinhe o Número",
+                subtitle: "Tente adivinhar o número entre 1 e 100!",
+                attemptsLabel: "Tentativas",
+                rangeLabel: "Intervalo", 
+                statusLabel: "Status",
+                statusPlaying: "Jogando",
+                statusWon: "Venceu!",
+                submitBtn: "Enviar",
+                restartBtn: "Novo Jogo",
+                historyTitle: "Histórico de Tentativas",
+                noHistoryText: "Nenhuma tentativa ainda...",
+                feedbackStart: "Faça sua primeira tentativa!",
+                feedbackHigh: "Muito alto! Tente um número menor.",
+                feedbackLow: "Muito baixo! Tente um número maior.",
+                feedbackCorrect: "Parabéns! Você acertou em {attempts} tentativas!",
+                feedbackInvalid: "Digite um número válido entre 1 e 100!",
+                historyHigh: "Alto",
+                historyLow: "Baixo",
+                placeholder: "?",
+                langButton: "🌐 EN"
+            },
+            en: {
+                title: "Guess the Number",
+                subtitle: "Try to guess the number between 1 and 100!",
+                attemptsLabel: "Attempts",
+                rangeLabel: "Range",
+                statusLabel: "Status", 
+                statusPlaying: "Playing",
+                statusWon: "Won!",
+                submitBtn: "Submit",
+                restartBtn: "New Game",
+                historyTitle: "Attempt History",
+                noHistoryText: "No attempts yet...",
+                feedbackStart: "Make your first guess!",
+                feedbackHigh: "Too high! Try a smaller number.",
+                feedbackLow: "Too low! Try a bigger number.",
+                feedbackCorrect: "Congratulations! You got it in {attempts} attempts!",
+                feedbackInvalid: "Enter a valid number between 1 and 100!",
+                historyHigh: "High",
+                historyLow: "Low",
+                placeholder: "?",
+                langButton: "🌐 PT"
+            }
+        };
+
+        // Função para alternar idioma
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
+            updateLanguage();
+        }
+
+        // Função para atualizar textos na interface
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('attemptsLabel').textContent = t.attemptsLabel;
+            document.getElementById('rangeLabel').textContent = t.rangeLabel;
+            document.getElementById('statusLabel').textContent = t.statusLabel;
+            document.getElementById('submitBtn').textContent = t.submitBtn;
+            document.getElementById('restartBtn').textContent = t.restartBtn;
+            document.getElementById('historyTitle').textContent = t.historyTitle;
+            document.getElementById('guessInput').placeholder = t.placeholder;
+            document.querySelector('.language-toggle').textContent = t.langButton;
+            
+            // Atualizar status
+            const statusElement = document.getElementById('status');
+            if (gameOver) {
+                statusElement.textContent = t.statusWon;
+            } else {
+                statusElement.textContent = t.statusPlaying;
+            }
+            
+            // Atualizar feedback atual
+            updateFeedbackLanguage();
+            
+            // Atualizar histórico
+            updateHistoryLanguage();
+        }
+
+        // Função para atualizar feedback baseado no idioma
+        function updateFeedbackLanguage() {
+            const t = translations[currentLanguage];
+            const feedbackElement = document.getElementById('feedback');
+            
+            if (gameHistory.length === 0) {
+                document.getElementById('feedbackText').textContent = t.feedbackStart;
+                feedbackElement.className = 'feedback-start';
+            } else {
+                const lastAttempt = gameHistory[gameHistory.length - 1];
+                if (lastAttempt.result === 'correct') {
+                    document.getElementById('feedbackText').textContent = t.feedbackCorrect.replace('{attempts}', attempts);
+                    feedbackElement.className = 'feedback-correct';
+                } else if (lastAttempt.result === 'high') {
+                    document.getElementById('feedbackText').textContent = t.feedbackHigh;
+                    feedbackElement.className = 'feedback-high';
+                } else if (lastAttempt.result === 'low') {
+                    document.getElementById('feedbackText').textContent = t.feedbackLow;
+                    feedbackElement.className = 'feedback-low';
+                }
+            }
+        }
+
+        // Função para atualizar histórico baseado no idioma
+        function updateHistoryLanguage() {
+            const t = translations[currentLanguage];
+            const historyList = document.getElementById('historyList');
+            
+            if (gameHistory.length === 0) {
+                historyList.innerHTML = `<div style="text-align: center; color: #718096; font-style: italic;">${t.noHistoryText}</div>`;
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            gameHistory.forEach(attempt => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let feedbackText = '';
+                let feedbackClass = '';
+                
+                if (attempt.result === 'high') {
+                    feedbackText = t.historyHigh;
+                    feedbackClass = 'high';
+                } else if (attempt.result === 'low') {
+                    feedbackText = t.historyLow;
+                    feedbackClass = 'low';
+                }
+                
+                historyItem.innerHTML = `
+                    <span class="history-guess">${attempt.guess}</span>
+                    ${attempt.result !== 'correct' ? `<span class="history-feedback ${feedbackClass}">${feedbackText}</span>` : ''}
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Função principal do jogo
+        function makeGuess() {
+            if (gameOver) return;
+            
+            const guessInput = document.getElementById('guessInput');
+            const guess = parseInt(guessInput.value);
+            const t = translations[currentLanguage];
+            
+            // Validação
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                showFeedback(t.feedbackInvalid, 'feedback-start');
+                return;
+            }
+            
+            attempts++;
+            document.getElementById('attempts').textContent = attempts;
+            
+            let result = '';
+            let feedbackText = '';
+            let feedbackClass = '';
+            
+            if (guess === targetNumber) {
+                result = 'correct';
+                feedbackText = t.feedbackCorrect.replace('{attempts}', attempts);
+                feedbackClass = 'feedback-correct';
+                gameOver = true;
+                document.getElementById('status').textContent = t.statusWon;
+                document.querySelector('.container').classList.add('celebration');
+            } else if (guess > targetNumber) {
+                result = 'high';
+                feedbackText = t.feedbackHigh;
+                feedbackClass = 'feedback-high';
+            } else {
+                result = 'low';
+                feedbackText = t.feedbackLow;
+                feedbackClass = 'feedback-low';
+            }
+            
+            // Adicionar ao histórico
+            gameHistory.push({
+                guess: guess,
+                result: result
+            });
+            
+            // Atualizar interface
+            showFeedback(feedbackText, feedbackClass);
+            updateHistory();
+            
+            // Limpar input
+            guessInput.value = '';
+            
+            // Focar no input se o jogo continuar
+            if (!gameOver) {
+                guessInput.focus();
+            }
+        }
+
+        // Função para mostrar feedback
+        function showFeedback(text, className) {
+            const feedbackElement = document.getElementById('feedback');
+            document.getElementById('feedbackText').textContent = text;
+            feedbackElement.className = className;
+            feedbackElement.classList.add('pulse');
+            
+            setTimeout(() => {
+                feedbackElement.classList.remove('pulse');
+            }, 500);
+        }
+
+        // Função para atualizar histórico
+        function updateHistory() {
+            updateHistoryLanguage();
+            
+            // Scroll para o final do histórico
+            const historyList = document.getElementById('historyList');
+            historyList.scrollTop = historyList.scrollHeight;
+        }
+
+        // Função para reiniciar o jogo
+        function restartGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            gameOver = false;
+            gameHistory = [];
+            
+            const t = translations[currentLanguage];
+            
+            document.getElementById('attempts').textContent = '0';
+            document.getElementById('status').textContent = t.statusPlaying;
+            document.getElementById('guessInput').value = '';
+            
+            showFeedback(t.feedbackStart, 'feedback-start');
+            updateHistory();
+            
+            document.querySelector('.container').classList.remove('celebration');
+            document.getElementById('guessInput').focus();
+        }
+
+        // Event listeners
+        document.getElementById('guessInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                makeGuess();
+            }
+        });
+
+        // Focar no input quando a página carregar
+        document.getElementById('guessInput').focus();
+    </script>
+</body>
+</html>

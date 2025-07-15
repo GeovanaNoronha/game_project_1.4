@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="style.css">
+    <title>Jogo da Forca</title>
+<title>primeira versão</title>
+   
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Jogo da Forca</h1>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="errorsCount">0</div>
+                <div class="stat-label">Erros</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="attemptsCount">0</div>
+                <div class="stat-label">Tentativas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="hitsCount">0</div>
+                <div class="stat-label">Acertos</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="hangman-container">
+                <div class="hangman">
+                    <div class="gallows">
+                        <div class="base"></div>
+                        <div class="pole"></div>
+                        <div class="top-bar"></div>
+                        <div class="noose"></div>
+                    </div>
+                    <div class="hangman-part head" id="head"></div>
+                    <div class="hangman-part body" id="body"></div>
+                    <div class="hangman-part left-arm" id="leftArm"></div>
+                    <div class="hangman-part right-arm" id="rightArm"></div>
+                    <div class="hangman-part left-leg" id="leftLeg"></div>
+                    <div class="hangman-part right-leg" id="rightLeg"></div>
+                </div>
+            </div>
+
+            <div class="word-area">
+                <div class="word-display" id="wordDisplay"></div>
+                
+                <div class="input-area">
+                    <div class="input-container">
+                        <input type="text" id="letterInput" maxlength="1" placeholder="?">
+                        <button class="btn btn-primary" onclick="guessLetter()">Tentar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="used-letters">
+            <h3>Letras usadas:</h3>
+            <div class="letters-grid" id="usedLetters"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+        
+        <button class="btn btn-secondary" onclick="newGame()">🎮 Novo Jogo</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
