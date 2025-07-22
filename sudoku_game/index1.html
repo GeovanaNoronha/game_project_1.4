@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku - Jogo de Lógica</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 SUDOKU</h1>
+        
+        <div class="difficulty-selector">
+            <label for="difficulty" id="difficultyLabel">Dificuldade:</label>
+            <select id="difficulty">
+                <option value="easy" id="easyOption">Fácil</option>
+                <option value="medium" selected id="mediumOption">Médio</option>
+                <option value="hard" id="hardOption">Difícil</option>
+            </select>
+        </div>
+
+        <div class="secondary-controls">
+            <button class="btn-secondary" onclick="toggleLanguage()" id="langBtn">🇺🇸 English</button>
+            <button class="btn-secondary" onclick="toggleDarkMode()" id="darkBtn">🌙 Modo Escuro</button>
+        </div>
+
+        <div class="game-controls">
+            <button class="btn" onclick="newGame()" id="newGameBtn">Novo Jogo</button>
+            <button class="btn" onclick="checkSolution()" id="checkBtn">Verificar</button>
+            <button class="btn" onclick="clearBoard()" id="clearBtn">Limpar</button>
+            <button class="btn" onclick="showHint()" id="hintBtn">Dica</button>
+        </div>
+
+        <div class="sudoku-grid" id="sudokuGrid"></div>
+
+        <div class="status" id="status">Preencha os números de 1 a 9</div>
+    </div>
+    <script src="script1.js"></script>  
+</body>
+</html>

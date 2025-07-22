@@ -1,0 +1,335 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2d5a27, #4a7c59, #6b8e23);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d5a27;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .secondary-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #666, #888);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #777, #999);
+        }
+
+        .btn-secondary.active {
+            background: linear-gradient(45deg, #4a7c59, #6b8e23);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4a7c59, #6b8e23);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #5a8c69, #7b9e33);
+        }
+
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            gap: 2px;
+            background: #2d5a27;
+            border: 4px solid #2d5a27;
+            border-radius: 10px;
+            padding: 6px;
+            margin: 0 auto;
+            max-width: 450px;
+            aspect-ratio: 1;
+        }
+
+        .cell {
+            background: white;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .cell:hover {
+            background: #f0f8e8;
+            transform: scale(1.05);
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            background: transparent;
+            color: #2d5a27;
+        }
+
+        .cell input:focus {
+            outline: none;
+            background: #e8f5e8;
+        }
+
+        .cell.given {
+            background: #f0f8e8;
+            font-weight: bold;
+            color: #1a3a17;
+        }
+
+        .cell.given input {
+            color: #1a3a17;
+            font-weight: bold;
+        }
+
+        .cell.invalid {
+            background: #ffe6e6 !important;
+            animation: shake 0.5s;
+        }
+
+        .cell.valid {
+            background: #e6ffe6 !important;
+        }
+
+        /* Bordas mais grossas para separar as regiões 3x3 */
+        .cell:nth-child(3n):not(:nth-child(9n)) {
+            border-right: 3px solid #2d5a27;
+        }
+
+        .cell:nth-child(n+19):nth-child(-n+27),
+        .cell:nth-child(n+46):nth-child(-n+54) {
+            border-bottom: 3px solid #2d5a27;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5a27;
+            min-height: 25px;
+        }
+
+        .victory {
+            color: #4a7c59;
+            font-size: 24px;
+            animation: celebration 1s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .difficulty-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-selector label {
+            color: #2d5a27;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 2px solid #4a7c59;
+            background: white;
+            color: #2d5a27;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+
+            .sudoku-grid {
+                max-width: 350px;
+            }
+
+            .cell {
+                font-size: 16px;
+            }
+
+            .cell input {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .sudoku-grid {
+                max-width: 280px;
+            }
+
+            .cell {
+                font-size: 14px;
+            }
+
+            .cell input {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+        }
+
+        body.dark-mode .container {
+            background: rgba(30, 30, 40, 0.95);
+            color: #ffffff;
+        }
+
+        body.dark-mode h1 {
+            color: #4a9eff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .cell {
+            background: #2d2d3a;
+            border-color: #444;
+            color: #ffffff;
+        }
+
+        body.dark-mode .cell:hover {
+            background: #3a3a4a;
+        }
+
+        body.dark-mode .cell input {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        body.dark-mode .cell input:focus {
+            background: #3a3a4a;
+        }
+
+        body.dark-mode .cell.given {
+            background: #1a4a3a;
+            color: #4a9eff;
+        }
+
+        body.dark-mode .cell.given input {
+            color: #4a9eff;
+        }
+
+        body.dark-mode .cell.invalid {
+            background: #4a1a1a !important;
+        }
+
+        body.dark-mode .cell.valid {
+            background: #1a4a1a !important;
+        }
+
+        body.dark-mode .sudoku-grid {
+            background: #1a1a2e;
+            border-color: #1a1a2e;
+        }
+
+        body.dark-mode .status {
+            color: #ffffff;
+        }
+
+        body.dark-mode .victory {
+            color: #4a9eff;
+        }
+
+        body.dark-mode .difficulty-selector label {
+            color: #ffffff;
+        }
+
+        body.dark-mode .difficulty-selector select {
+            background: #2d2d3a;
+            color: #ffffff;
+            border-color: #4a9eff;
+        }
